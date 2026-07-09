@@ -1,0 +1,138 @@
+/* ==========================================================================
+   DESKTOP MATRIX: Right-Side Flyouts (Overrides Theme Defaults)
+   ========================================================================= */
+@media (min-width: 769px) {
+    /* 1. Force the Level 2 item ("Phoenix Code") to act as the exact anchor point */
+    .nb-nav__list > li > .sub-menu > li.menu-item-has-children {
+        position: relative !important;
+    }
+    
+    /* 2. Target the Level 3 nested menu exclusively and push it to the right */
+    .nb-nav__list > li > .sub-menu > li.menu-item-has-children > .sub-menu {
+        position: absolute !important;
+        top: -12px !important; /* Aligns the top of the flyout seamlessly with the parent item */
+        left: 100% !important; /* Pushes it entirely flush to the right edge */
+        margin-top: 0 !important;
+        margin-left: 5px !important; /* Small visual gap from the parent menu */
+        min-width: 280px !important; /* Ensures long plugin names don't wrap awkwardly */
+        
+        /* Animation starting state */
+        transform: translateX(15px) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease !important;
+        display: block !important;
+    }
+    
+    /* 3. Smooth reveal on hover */
+    .nb-nav__list > li > .sub-menu > li.menu-item-has-children:hover > .sub-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+    }
+
+    /* Hide Mobile Portal on Desktop */
+    #phx-mobile-portal { display: none !important; }
+}
+
+/* ==========================================================================
+   MOBILE MATRIX: Isolated Right Drawer with App-Like Drill-Down
+   ========================================================================= */
+@media (max-width: 768px) {
+    /* Hard-hide the theme's default mobile menu canvas */
+    .nb-nav { display: none !important; }
+
+    /* Base Portal Wrapper with Optimized Containment Layout */
+    #phx-mobile-portal {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100vh;
+        z-index: 99999999;
+        pointer-events: none;
+        
+        /* Hardware Acceleration & Containment Performance */
+        visibility: hidden;
+        content-visibility: hidden; /* Skips browser rendering calculations until toggled */
+        contain: strict; /* Isolates this DOM node from main document tree reflows */
+    }
+    #phx-mobile-portal.phx-active {
+        pointer-events: auto;
+        visibility: visible;
+        content-visibility: visible;
+    }
+
+    /* Dark Overlay Background */
+    .phx-drawer-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(3, 7, 18, 0.8);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    #phx-mobile-portal.phx-active .phx-drawer-overlay { opacity: 1; }
+
+    /* The Main Drawer (Slides from Right) */
+    .phx-drawer {
+        position: absolute;
+        top: 0; right: 0; left: auto; /* Anchors the drawer to the right edge */
+        width: 85%; max-width: 340px; height: 100%;
+        background: #030712;
+        border-left: 1px solid rgba(255,255,255,0.08); /* Border moved to the left */
+        transform: translateX(100%); /* Hides off-screen to the right by default */
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Contains the sliding sub-menus */
+    }
+    #phx-mobile-portal.phx-active .phx-drawer { transform: translateX(0); }
+
+    /* Drawer Header & Close Button */
+    .phx-drawer-header {
+        display: flex; justify-content: flex-end; align-items: center; /* Pushes button to right */
+        padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    #phx-drawer-close { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0; display: flex; }
+
+    /* Menu Link Formatting */
+    .phx-drawer-content { flex-grow: 1; position: relative; overflow-y: auto; overflow-x: hidden; }
+    .phx-mobile-menu { list-style: none; margin: 0; padding: 0; width: 100%; }
+    .phx-mobile-menu li { border-bottom: 1px solid rgba(255,255,255,0.03); width: 100%; }
+    .phx-mobile-menu li a {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 24px; color: #cbd5e1; font-size: 1.1rem; font-weight: 600; text-decoration: none;
+        
+        /* Typography Hardening */
+        font-family: "Roboto Condensed", sans-serif !important; /* Hardcode the exact font face */
+        text-transform: uppercase !important; /* Forces all letters to uppercase */
+        letter-spacing: 0.05em !important; /* Adds slight tracking to make uppercase text highly readable */
+    }
+
+    /* Drill-Down Sub-Menus (Slide from Right over the active menu) */
+    .phx-mobile-menu .sub-menu {
+        position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
+        background: #030712;
+        z-index: 10;
+        transform: translateX(100%); /* Hides to the right initially */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        list-style: none; padding: 0; margin: 0;
+        display: block !important;
+    }
+    .phx-mobile-menu .sub-menu.phx-submenu-active {
+        transform: translateX(0); /* Slides perfectly over the parent menu */
+    }
+
+    /* Back Button Formatting */
+    .phx-back-btn a { 
+        color: #38bdf8 !important; 
+        font-size: 0.95rem !important; 
+        background: rgba(56, 189, 248, 0.05);
+        font-family: "Roboto Condensed", sans-serif !important; /* Hardcode the exact font face */
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+    }
+    
+    /* Arrow Indicator for Parent Links */
+    .phx-mobile-menu .menu-item-has-children > a::after {
+        content: '→'; color: #64748b; font-family: monospace; font-size: 1.2rem;
+    }
+}
