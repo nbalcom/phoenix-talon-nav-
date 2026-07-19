@@ -1,22 +1,20 @@
 /* ==========================================================================
-   DESKTOP MATRIX: Right-Side Flyouts (Overrides Theme Defaults)
+   DESKTOP MATRIX: Right-Side Flyouts (Adaptive Layout Structural Base)
    ========================================================================= */
 @media (min-width: 769px) {
-    /* 1. Force the Level 2 item ("Phoenix Code") to act as the exact anchor point */
+    /* FUTURE EDITORS: Change or remove these specific class chains if your theme uses custom desktop sub-menu selectors */
     .nb-nav__list > li > .sub-menu > li.menu-item-has-children {
         position: relative !important;
     }
     
-    /* 2. Target the Level 3 nested menu exclusively and push it to the right */
     .nb-nav__list > li > .sub-menu > li.menu-item-has-children > .sub-menu {
         position: absolute !important;
-        top: -12px !important; /* Aligns the top of the flyout seamlessly with the parent item */
-        left: 100% !important; /* Pushes it entirely flush to the right edge */
+        top: -12px !important; 
+        left: 100% !important; 
         margin-top: 0 !important;
-        margin-left: 5px !important; /* Small visual gap from the parent menu */
-        min-width: 280px !important; /* Ensures long plugin names don't wrap awkwardly */
+        margin-left: 5px !important; 
+        min-width: 280px !important; 
         
-        /* Animation starting state */
         transform: translateX(15px) !important;
         opacity: 0 !important;
         visibility: hidden !important;
@@ -24,23 +22,20 @@
         display: block !important;
     }
     
-    /* 3. Smooth reveal on hover */
     .nb-nav__list > li > .sub-menu > li.menu-item-has-children:hover > .sub-menu {
         opacity: 1 !important;
         visibility: visible !important;
         transform: translateX(0) !important;
     }
 
-    /* Hide Mobile Portal on Desktop */
     #phx-mobile-portal { display: none !important; }
 }
 
 /* ==========================================================================
-   MOBILE MATRIX: Isolated Right Drawer with App-Like Drill-Down
+   MOBILE MATRIX: Universal Isolated Adaptive Drawer Configuration
    ========================================================================= */
 @media (max-width: 768px) {
-    /* Hard-hide the theme's default mobile menu canvas */
-    .nb-nav { display: none !important; }
+    /* FUTURE EDITORS: Mobile hide controls are now handled dynamically via options variables in your admin script dashboard framework */
 
     /* Base Portal Wrapper with Optimized Containment Layout */
     #phx-mobile-portal {
@@ -49,10 +44,9 @@
         z-index: 99999999;
         pointer-events: none;
         
-        /* Hardware Acceleration & Containment Performance */
         visibility: hidden;
-        content-visibility: hidden; /* Skips browser rendering calculations until toggled */
-        contain: strict; /* Isolates this DOM node from main document tree reflows */
+        content-visibility: hidden; 
+        contain: strict; 
     }
     #phx-mobile-portal.phx-active {
         pointer-events: auto;
@@ -60,79 +54,90 @@
         content-visibility: visible;
     }
 
-    /* Dark Overlay Background */
+    /* Dark Overlay Backdrop Layout */
     .phx-drawer-overlay {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(3, 7, 18, 0.8);
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent baseline tint fallback */
         backdrop-filter: blur(4px);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
     #phx-mobile-portal.phx-active .phx-drawer-overlay { opacity: 1; }
 
-    /* The Main Drawer (Slides from Right) */
+    /* The Main Drawer Container */
     .phx-drawer {
         position: absolute;
-        top: 0; right: 0; left: auto; /* Anchors the drawer to the right edge */
+        top: 0; right: 0; left: auto; 
         width: 85%; max-width: 340px; height: 100%;
-        background: #030712;
-        border-left: 1px solid rgba(255,255,255,0.08); /* Border moved to the left */
-        transform: translateX(100%); /* Hides off-screen to the right by default */
+        
+        /* ADAPTIVE UPDATE: Inherits theme backgrounds naturally instead of locking down explicit dark profiles */
+        background-color: var(--wp--preset--color--background, #ffffff);
+        color: inherit;
+        
+        border-left: 1px solid rgba(0, 0, 0, 0.08); 
+        transform: translateX(100%); 
         transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* Contains the sliding sub-menus */
+        overflow: hidden; 
     }
     #phx-mobile-portal.phx-active .phx-drawer { transform: translateX(0); }
 
-    /* Drawer Header & Close Button */
+    /* Close Controller Layout */
     .phx-drawer-header {
-        display: flex; justify-content: flex-end; align-items: center; /* Pushes button to right */
-        padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex; justify-content: flex-end; align-items: center; 
+        padding: 24px; border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
-    #phx-drawer-close { background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0; display: flex; }
+    #phx-drawer-close { background: none; border: none; color: inherit; opacity: 0.7; cursor: pointer; padding: 0; display: flex; }
+    #phx-drawer-close:hover { opacity: 1; }
 
-    /* Menu Link Formatting */
+    /* Responsive Link Formatting */
     .phx-drawer-content { flex-grow: 1; position: relative; overflow-y: auto; overflow-x: hidden; }
     .phx-mobile-menu { list-style: none; margin: 0; padding: 0; width: 100%; }
-    .phx-mobile-menu li { border-bottom: 1px solid rgba(255,255,255,0.03); width: 100%; }
+    .phx-mobile-menu li { border-bottom: 1px solid rgba(0, 0, 0, 0.03); width: 100%; }
+    
     .phx-mobile-menu li a {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 18px 24px; color: #cbd5e1; font-size: 1.1rem; font-weight: 600; text-decoration: none;
+        padding: 18px 24px; 
+        color: inherit; 
+        font-size: 1.1rem; 
+        font-weight: 600; 
+        text-decoration: none;
         
-        /* Typography Hardening */
-        font-family: "Roboto Condensed", sans-serif !important; /* Hardcode the exact font face */
-        text-transform: uppercase !important; /* Forces all letters to uppercase */
-        letter-spacing: 0.05em !important; /* Adds slight tracking to make uppercase text highly readable */
+        /* ADAPTIVE UPDATE: Inherits the core active fonts and visual treatments instead of forcing hardcoded uppercase variables */
+        font-family: inherit !important; 
+        text-transform: inherit !important; 
+        letter-spacing: inherit !important; 
     }
 
-    /* Drill-Down Sub-Menus (Slide from Right over the active menu) */
+    /* Asynchronous Sliding Drawer Panels */
     .phx-mobile-menu .sub-menu {
         position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
-        background: #030712;
+        background-color: var(--wp--preset--color--background, #ffffff);
         z-index: 10;
-        transform: translateX(100%); /* Hides to the right initially */
+        transform: translateX(100%); 
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         list-style: none; padding: 0; margin: 0;
         display: block !important;
     }
+    
     .phx-mobile-menu .sub-menu.phx-submenu-active {
-        transform: translateX(0); /* Slides perfectly over the parent menu */
+        transform: translateX(0); 
     }
 
-    /* Back Button Formatting */
+    /* Navigation Back Button Mechanics Styling */
     .phx-back-btn a { 
-        color: #38bdf8 !important; 
         font-size: 0.95rem !important; 
-        background: rgba(56, 189, 248, 0.05);
-        font-family: "Roboto Condensed", sans-serif !important; /* Hardcode the exact font face */
-        text-transform: uppercase !important;
-        letter-spacing: 0.05em !important;
+        opacity: 0.8;
+        background: rgba(0, 0, 0, 0.02);
+        font-family: inherit !important; 
+        text-transform: inherit !important;
+        letter-spacing: inherit !important;
     }
     
-    /* Arrow Indicator for Parent Links */
+    /* Navigation Hierarchy Trigger Indicators */
     .phx-mobile-menu .menu-item-has-children > a::after {
-        content: '→'; color: #64748b; font-family: monospace; font-size: 1.2rem;
+        content: '→'; opacity: 0.5; font-family: monospace; font-size: 1.2rem; margin-left: 10px;
     }
 }

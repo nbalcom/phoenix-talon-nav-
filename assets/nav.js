@@ -1,14 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const themeHamburger = document.getElementById('nb-menu-toggle');
+    // RESOLVE SELECTOR TARGET DYNAMICALLY: Pull the selector string from the admin options panel array data layer
+    const targetSelector = (typeof phxTalonConfig !== 'undefined' && phxTalonConfig.hamburgerSelector) 
+        ? phxTalonConfig.hamburgerSelector 
+        : '.phx-menu-toggle';
+
+    const themeHamburgers = document.querySelectorAll(targetSelector);
     const portal = document.getElementById('phx-mobile-portal');
     const overlay = document.getElementById('phx-drawer-overlay');
     const closeBtn = document.getElementById('phx-drawer-close');
 
-    if (!themeHamburger || !portal) return;
+    if (!portal) return;
 
-    // Initialize Root Canvas ARIA States
-    themeHamburger.setAttribute('aria-expanded', 'false');
-    themeHamburger.setAttribute('aria-controls', 'phx-mobile-portal');
+    // Initialize Root Canvas ARIA States across matching elements discovered inside active viewports
+    themeHamburgers.forEach(hamburger => {
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-controls', 'phx-mobile-portal');
+    });
     portal.setAttribute('aria-hidden', 'true');
 
     // Centralized state controllers
@@ -16,23 +23,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth <= 768) {
             e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
             portal.classList.add('phx-active');
-            themeHamburger.setAttribute('aria-expanded', 'true');
+            
+            themeHamburgers.forEach(hamburger => hamburger.setAttribute('aria-expanded', 'true'));
             portal.setAttribute('aria-hidden', 'false');
         }
     };
 
     const closePortal = () => {
         portal.classList.remove('phx-active');
-        themeHamburger.setAttribute('aria-expanded', 'false');
+        themeHamburgers.forEach(hamburger => hamburger.setAttribute('aria-expanded', 'false'));
         portal.setAttribute('aria-hidden', 'true');
     };
 
-    // 1. Intercept Theme Hamburger Click via Capture Phase
-    themeHamburger.addEventListener('click', openPortal, true); 
+    // 1. Intercept Theme Hamburger Click via Dynamic Selector Node Mapping loops
+    themeHamburgers.forEach(hamburger => {
+        hamburger.addEventListener('click', openPortal, true); 
+    });
 
     // 2. Close Menu Actions
-    closeBtn.addEventListener('click', closePortal);
-    overlay.addEventListener('click', closePortal);
+    if(closeBtn) closeBtn.addEventListener('click', closePortal);
+    if(overlay) overlay.addEventListener('click', closePortal);
     
     // Add Keyboard Accessibility (Escape Key to Close)
     document.addEventListener('keydown', function(e) {
@@ -61,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Slide Sub-Menu IN (Toggle ARIA Open)
         link.addEventListener('click', function(e) {
-            // Early exit if on desktop viewports to allow native navigation actions
             if (window.innerWidth > 768) return;
             
             e.preventDefault();
